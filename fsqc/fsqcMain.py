@@ -1467,7 +1467,7 @@ def _check_arguments(argsDict):
 # check packages
 
 
-def _check_packages():
+def _check_packages(argsDict):
     """
     an internal function to check required / recommended packages
 
@@ -1492,26 +1492,41 @@ def _check_packages():
             "ERROR: the 'matplotlib' package is required for running this script, please install.\n"
         )
 
-    if importlib.util.find_spec("lapy") is not None:
-        import lapy as lp
+    if argsDict["shape"]:
+        if importlib.util.find_spec("lapy") is not None:
+            import lapy as lp
 
-        if not hasattr(lp, "__version__"):
+            if not hasattr(lp, "__version__"):
+                raise ImportError(
+                    "ERROR: Could not determine version of the 'lapy' package (see README.md for details on installation)"
+                )
+            elif packaging.version.parse(lp.__version__) < packaging.version.parse("1.0"):
+                raise ImportError(
+                    "ERROR: A version >=1.0 of the 'lapy' package is required (see README.md for details on installation)"
+                )
+        else:
             raise ImportError(
-                "ERROR: Could not determine version of the 'lapy' package (see README.md for details on installation)"
+                "ERROR: Could not find the 'lapy' package (see README.md for details on installation)"
             )
-        elif packaging.version.parse(lp.__version__) < packaging.version.parse("1.0"):
-            raise ImportError(
-                "ERROR: A version >=1.0 of the 'lapy' package is required (see README.md for details on installation)"
-            )
-    else:
-        raise ImportError(
-            "ERROR: Could not find the 'lapy' package (see README.md for details on installation)"
-        )
 
-    if importlib.util.find_spec("brainprint") is None:
-        raise ImportError(
-            "ERROR: could not import the brainprint package, is it installed?"
-        )
+        if importlib.util.find_spec("brainprint") is None:
+            raise ImportError(
+                "ERROR: could not import the brainprint package, is it installed?"
+            )
+
+    if argsDict["surfaces"] or argsDict["surfaces_html"]:
+        if importlib.util.find_spec("whippersnappy") is None:
+            raise ImportError(
+                "ERROR: the 'whippersnappy' package is required for surface plots, please install.\n"
+            )
+        if importlib.util.find_spec("PyQt6") is None:
+            raise ImportError(
+                "ERROR: the 'PyQt6' package is required for surface plots, please install.\n"
+            )
+        if importlib.util.find_spec("PIL") is None:
+            raise ImportError(
+                "ERROR: the 'pillow' package is required for surface plots (HTML summary), please install.\n"
+            )
 
 
 # ------------------------------------------------------------------------------
@@ -3735,7 +3750,7 @@ def run_fsqc(
     argsDict = _check_arguments(argsDict)
 
     # check packages
-    _check_packages()
+    _check_packages(argsDict)
 
     # run fsqc
     _do_fsqc(argsDict)

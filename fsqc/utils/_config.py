@@ -6,8 +6,6 @@ from functools import partial
 from importlib.metadata import requires, version
 from typing import IO
 
-import psutil
-
 
 def sys_info(fid: IO | None = None, developer: bool = False):
     """Print the system information for debugging.
@@ -32,13 +30,22 @@ def sys_info(fid: IO | None = None, developer: bool = False):
     out("Executable:".ljust(ljust) + sys.executable + "\n")
     # CPU information
     out("CPU:".ljust(ljust) + platform.processor() + "\n")
-    out("Physical cores:".ljust(ljust) + str(psutil.cpu_count(False)) + "\n")
-    out("Logical cores:".ljust(ljust) + str(psutil.cpu_count(True)) + "\n")
-    # Memory information
-    out("RAM:".ljust(ljust))
-    out(f"{psutil.virtual_memory().total / float(2 ** 30):0.1f} GB\n")
-    out("SWAP:".ljust(ljust))
-    out(f"{psutil.swap_memory().total / float(2 ** 30):0.1f} GB\n")
+
+    try:
+        import psutil
+
+        out("Physical cores:".ljust(ljust) + str(psutil.cpu_count(False)) + "\n")
+        out("Logical cores:".ljust(ljust) + str(psutil.cpu_count(True)) + "\n")
+        # Memory information
+        out("RAM:".ljust(ljust))
+        out(f"{psutil.virtual_memory().total / float(2 ** 30):0.1f} GB\n")
+        out("SWAP:".ljust(ljust))
+        out(f"{psutil.swap_memory().total / float(2 ** 30):0.1f} GB\n")
+    except ImportError:
+        out("Physical cores:".ljust(ljust) + "psutil not installed\n")
+        out("Logical cores:".ljust(ljust) + "psutil not installed\n")
+        out("RAM:".ljust(ljust) + "psutil not installed\n")
+        out("SWAP:".ljust(ljust) + "psutil not installed\n")
 
     # dependencies
     out("\nDependencies info\n")

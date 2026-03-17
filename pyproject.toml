@@ -56,11 +56,23 @@ doc = [
     'IPython', # For syntax highlighting in notebooks
     'ipykernel',
 ]
+shape = [
+    'brainprint==0.4.0',
+    'lapy>=1.0.0,<2',
+]
 style = [
     'bibclean',
     'codespell',
     'pydocstyle[toml]',
     'ruff',
+]
+surfaces = [
+    'PyQt6',
+    'whippersnappy>=2.1.0',
+    'pyopengl',
+    'glfw',
+    'pyrr',
+    'pillow',
 ]
 test = [
     'pytest',
@@ -71,6 +83,8 @@ all = [
     'fsqc[build]',
     'fsqc[doc]',
     'fsqc[style]',
+    'fsqc[shape]',
+    'fsqc[surfaces]',
 ]
 full = [
     'fsqc[all]',
