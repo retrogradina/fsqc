@@ -58,7 +58,6 @@ doc = [
 ]
 shape = [
     'brainprint==0.4.0',
-    'lapy>=1.0.0,<2',
 ]
 style = [
     'bibclean',

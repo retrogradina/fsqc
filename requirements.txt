@@ -1,3 +1,4 @@
+lapy>=1.0.0,<2
 matplotlib
 nibabel
 numpy

@@ -1492,23 +1492,23 @@ def _check_packages(argsDict):
             "ERROR: the 'matplotlib' package is required for running this script, please install.\n"
         )
 
-    if argsDict["shape"]:
-        if importlib.util.find_spec("lapy") is not None:
-            import lapy as lp
+    if importlib.util.find_spec("lapy") is not None:
+        import lapy as lp
 
-            if not hasattr(lp, "__version__"):
-                raise ImportError(
-                    "ERROR: Could not determine version of the 'lapy' package (see README.md for details on installation)"
-                )
-            elif packaging.version.parse(lp.__version__) < packaging.version.parse("1.0"):
-                raise ImportError(
-                    "ERROR: A version >=1.0 of the 'lapy' package is required (see README.md for details on installation)"
-                )
-        else:
+        if not hasattr(lp, "__version__"):
             raise ImportError(
-                "ERROR: Could not find the 'lapy' package (see README.md for details on installation)"
+                "ERROR: Could not determine version of the 'lapy' package (see README.md for details on installation)"
             )
+        elif packaging.version.parse(lp.__version__) < packaging.version.parse("1.0"):
+            raise ImportError(
+                "ERROR: A version >=1.0 of the 'lapy' package is required (see README.md for details on installation)"
+            )
+    else:
+        raise ImportError(
+            "ERROR: Could not find the 'lapy' package (see README.md for details on installation)"
+        )
 
+    if argsDict["shape"]:
         if importlib.util.find_spec("brainprint") is None:
             raise ImportError(
                 "ERROR: could not import the brainprint package, is it installed?"
